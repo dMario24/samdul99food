@@ -1,0 +1,18 @@
+[project]
+name = "samdul77food"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "dMario24", email = "data.mario24@gmail.com"},
+]
+dependencies = [
+    "fastapi>=0.114.1",
+    "uvicorn[standard]>=0.30.6",
+]
+requires-python = "==3.11.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
