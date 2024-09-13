@@ -2,8 +2,8 @@ FROM python:3.11
 
 WORKDIR /code
 
-COPY src/samdul99food/main.py /code/
+COPY src/samdul77food/main.py /code/
 
-RUN pip install --no-cache-dir --upgrade git+https://github.com/dMario24/samdul99food.git@0.1.0
+RUN pip install --no-cache-dir --upgrade git+https://github.com/dMario24/samdul99food.git@0.1.1
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
