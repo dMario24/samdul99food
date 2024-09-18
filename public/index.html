@@ -13,6 +13,10 @@
         <button type="submit">저장</button>
     </form>
 
+    <input type="file" id="imageUpload">
+    <button onclick="uploadFile()">업로드</button>
+    <div id="result"></div>
+
     <script>
         document.getElementById("foodForm").addEventListener("submit", function(event) {
             event.preventDefault(); // 폼 기본 제출 방지
@@ -29,28 +33,28 @@
         });
     </script>
 
-    <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+    <script>
+        function uploadFile() {
+        const fileInput = document.getElementById('imageUpload');
+        const file = fileInput.files[0];
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyCaq--eTrpf_f29baw_NhJoGnhmEyWTEDc",
-    authDomain: "samdul77food.firebaseapp.com",
-    projectId: "samdul77food",
-    storageBucket: "samdul77food.appspot.com",
-    messagingSenderId: "837529612336",
-    appId: "1:837529612336:web:143e6e91d6bb2d98023df5",
-    measurementId: "G-D3G5893TD0"
-  };
+        const formData = new FormData();
+        formData.append('file', file, file.name);
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
+        fetch('http://localhost:8000/photo', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            const resultDiv = document.getElementById('result');
+            resultDiv   
+        .textContent = `서버 응답: ${JSON.stringify(data)}`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+    </script>
 </body>
 </html>
