@@ -5,6 +5,7 @@ import pytz
 from PIL import Image
 import uuid
 import os
+import csv
 
 app = FastAPI()
 
@@ -38,18 +39,30 @@ def food(name: str):
     korea_time = datetime.now(timezone)
     formatted_time = korea_time.strftime('%Y-%m-%d %H:%M:%S')
 
-    import pymysql
-    db = pymysql.connect(host = '172.18.0.1',
-                     port = 13306,
-                     user = 'food',
-                     passwd = '1234',
-                     db = 'fooddb',
-                     charset = 'utf8')
-    cursor = db.cursor(pymysql.cursors.DictCursor)
+    # DB
+    import pymysql.cursors
+    connection = pymysql.connect(host=os.getenv("DB_IP", "localhost"),
+                             user='food',
+                             password='1234',
+                             database='fooddb',
+                             port = int(os.getenv("DB_PORT", "33306")), 
+                             cursorclass=pymysql.cursors.DictCursor)
 
-    sql = "INSERT INTO foodhistory(username, foodname, dt) VALUES(%s,%s,%s)"
-    cursor.execute(sql, ('n77', name, formatted_time))
-    db.commit()
+    sql = "INSERT INTO foodhistory(`username`, `foodname`, `dt`) VALUES(%s,%s,%s)"
+    
+    with connection:
+        with connection.cursor() as cursor:
+            cursor.execute(sql, ('n77', name, formatted_time))
+        connection.commit()
+
+    # CSV
+    file_path = os.getenv("FILE_PATH", f"{os.getenv('HOME')}/tmp/foodcsv/food.csv")
+    if not os.path.exists(file_path):
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    
+    data = {"food": name, "time": formatted_time}
+    with open(file_path, 'a', newline='') as f:
+        csv.DictWriter(f, fieldnames=['food', 'time']).writerow(data)
 
     return {"food": name, "time": formatted_time}
 
