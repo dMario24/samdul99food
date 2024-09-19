@@ -1,23 +1,61 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>삼둘푸드</title>
-</head>
-<body>
-    <h1>음식 이름 입력</h1>
-    <form id="foodForm">
-        <label for="foodName">음식 이름: </label>
-        <input type="text" id="foodName" name="foodName" required>
-        <button type="submit">저장</button>
-    </form>
+<!DOCTYPE HTML>
+<!--
+	Highlights by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>samdulFood</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload">
 
-    <input type="file" id="imageUpload">
-    <button onclick="uploadFile()">업로드</button>
-    <div id="result"></div>
+		<!-- Header -->
+			<section id="header">
+				<header class="major">
+					<h1>SAMDULFOOD</h1>
+					<p id="foodDisplay">😋</p>
+				</header>
+			</section>	
 
-    <script>
+		<!-- Footer -->
+			<section id="footer">
+				<div class="container">
+					<header class="major">
+						<h2>What did you eat?</h2>
+					</header>
+					<!-- <form method="post" action="#"> -->
+					<form id="foodForm" action="#">
+						<div class="row gtr-uniform">
+							<div class="col-12"><input type="text" name="foodName" id="foodName" placeholder="Food Name" /></div>
+							<div class="col-12">
+								<ul class="actions special">
+									<li><input type="submit" value="Send Message" class="primary" /></li>
+								</ul>
+							</div>
+						</div>
+					</form>
+				</div>
+				<footer>
+					<ul class="copyright">
+						<li>&copy; 32 food 😋</li>
+					</ul>
+				</footer>
+			</section>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+			<script>
         document.getElementById("foodForm").addEventListener("submit", function(event) {
             event.preventDefault(); // 폼 기본 제출 방지
 
@@ -27,34 +65,28 @@
             fetch(url, {
                 method: 'GET',
             })
+						.then(response => {
+							if (response.ok) {
+								// 음식 이름을 화면에 표시
+								document.getElementById("foodDisplay").textContent = foodName + "!!! 맛낫나욤 😋";
+
+								// 입력된 값 지우기
+								document.getElementById("foodName").value = "";
+
+								// 음식 이름 표시 후 상단으로 스크롤 이동
+								window.scrollTo({
+									top: 0,
+									behavior: 'smooth'
+								});
+							} else {
+								console.error('API 호출 실패:', response.statusText);
+							}
+						})
             .catch(error => {
                 console.error('Error:', error);
             });
         });
     </script>
 
-    <script>
-        function uploadFile() {
-        const fileInput = document.getElementById('imageUpload');
-        const file = fileInput.files[0];
-
-        const formData = new FormData();
-        formData.append('file', file, file.name);
-
-        fetch('http://localhost:8000/photo', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            const resultDiv = document.getElementById('result');
-            resultDiv   
-        .textContent = `서버 응답: ${JSON.stringify(data)}`;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-    </script>
-</body>
+	</body>
 </html>
